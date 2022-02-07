@@ -70,6 +70,7 @@ parts:
             - qt515base
             - qt515webengine
      source: https://github.com/keshavbhatt/worddle.git
+     source-subdir: src/
      override-build: |
             snapcraftctl build
             sed -i 's|Icon=.*|Icon=${SNAP}/meta/gui/icon.png|g' ${SNAPCRAFT_PART_SRC}/worddle.desktop
