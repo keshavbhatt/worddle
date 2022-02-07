@@ -52,6 +52,7 @@ plugs:
     target: $SNAP/qt513
     default-provider: qt513
 
+parts:
   snap-launcher:
      plugin: dump
      source: snap_launcher/
