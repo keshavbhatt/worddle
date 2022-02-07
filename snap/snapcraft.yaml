@@ -72,8 +72,8 @@ parts:
      source: https://github.com/keshavbhatt/worddle.git
      source-subdir: src/
      override-build: |
-            snapcraftctl build
             . /opt/qt515/bin/qt515-env.sh
             which qmake
+            snapcraftctl build
             sed -i 's|Icon=.*|Icon=${SNAP}/meta/gui/icon.png|g' ${SNAPCRAFT_PART_SRC}/worddle.desktop
             cp -rf ${SNAPCRAFT_PART_SRC}/worddle.desktop ${SNAPCRAFT_PART_INSTALL}/usr/share/applications/worddle.desktop
