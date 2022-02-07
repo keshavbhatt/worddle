@@ -65,7 +65,7 @@ parts:
             - qt515base
             - qt515tools
             - qt515webengine
-            - libg11-mesa-dev
+            - libgl1-mesa-dev
      stage-packages:
             - qt515base
             - qt515webengine
