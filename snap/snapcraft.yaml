@@ -6,7 +6,7 @@ description: |
 grade: stable
 confinement: strict
 icon: snap/gui/icon.png
-base: core18
+base: core20
 
 compression: lzo
 
@@ -47,15 +47,29 @@ plugs:
     interface: content
     target: $SNAP/data-dir/sounds
     default-provider: gtk-common-themes
-  qt513:
-    interface: content
-    target: $SNAP/qt513
-    default-provider: qt513
+
+package-repositories:
+        - type: apt
+          formats: [deb, deb-src]
+          components: [main]
+          suites: [focal]
+          key-id: C65D51784EDC19A871DBDBB710C56D0DE9977759
+          url: https://ppa.launchpadcontent.net/beineri/opt-qt-5.15.0-focal/ubuntu
+
 
 parts:
-  snap-launcher:
-     plugin: dump
-     source: snap_launcher/
+  application:
+     plugin: qmake
+     build-packages:
+            - build-essential
+            - qt515base
+            - qt515tools
+            - qt515webengine
+            - libg11-mesa-dev
+     stage-packages:
+            - qt515base
+            - qt515webengine
+     source: https://github.com/keshavbhatt/worddle.git
      override-build: |
             snapcraftctl build
             sed -i 's|Icon=.*|Icon=${SNAP}/meta/gui/icon.png|g' ${SNAPCRAFT_PART_SRC}/worddle.desktop
