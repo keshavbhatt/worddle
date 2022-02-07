@@ -1,2 +1,2 @@
-# warddle
-Wardle app for Linux Desktop
+# Worddle
+Wordle app for Linux Desktop
