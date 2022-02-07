@@ -60,7 +60,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::closeEvent(QCloseEvent *event) {
   settings.setValue("mainWindowGeo", saveGeometry());
-  settings.setValue("windowState", saveState());
+  settings.setValue("mainWindowState", saveState());
 
   QMainWindow::closeEvent(event);
 }
