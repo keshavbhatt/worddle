@@ -1,0 +1,61 @@
+name: worddle
+version: '1.0'
+summary: Guess a five-letter word in siz attempts
+description: |
+  Wordle is a web-based word game developed by Josh Wardle. Players have six attempts to guess a five-letter word; feedback is given for each guess, in the form of colored tiles, indicating when letters match or occupy the correct position. 
+grade: stable
+confinement: strict
+icon: snap/gui/icon.png
+base: core18
+
+compression: lzo
+
+architectures:
+  - build-on: amd64
+    run-on: amd64
+
+apps:
+  worddle:
+    command: desktop-launch worddle
+    environment:
+       DISABLE_WAYLAND: 1
+    desktop: usr/share/applications/worddle.desktop
+    plugs:
+        - browser-support
+        - desktop
+        - desktop-legacy
+        - gsettings
+        - home
+        - opengl
+        - audio-playback
+        - unity7
+        - x11
+        - network
+        - wayland
+
+plugs:
+  gsettings:
+  gtk-3-themes:
+    interface: content
+    target: $SNAP/data-dir/themes
+    default-provider: gtk-common-themes
+  icon-themes:
+    interface: content
+    target: $SNAP/data-dir/icons
+    default-provider: gtk-common-themes
+  sound-themes:
+    interface: content
+    target: $SNAP/data-dir/sounds
+    default-provider: gtk-common-themes
+  qt513:
+    interface: content
+    target: $SNAP/qt513
+    default-provider: qt513
+
+  snap-launcher:
+     plugin: dump
+     source: snap_launcher/
+     override-build: |
+            snapcraftctl build
+            sed -i 's|Icon=.*|Icon=${SNAP}/meta/gui/icon.png|g' ${SNAPCRAFT_PART_SRC}/worddle.desktop
+            cp -rf ${SNAPCRAFT_PART_SRC}/worddle.desktop ${SNAPCRAFT_PART_INSTALL}/usr/share/applications/worddle.desktop

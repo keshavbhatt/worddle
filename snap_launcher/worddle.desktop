@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+GenericName=Word puzzle game
+Name[en_US]=Worddle
+Comment=Guess a five-letter word in six attempts
+Name=Worddle
+Type=Application
+Icon=${SNAP}/meta/gui/icon.png
+Keywords=game;puzzle;guess;vocab
+Exec=worddle %F
+Categories=Game;Qt;
+Terminal=false
+StartupNotify=false
