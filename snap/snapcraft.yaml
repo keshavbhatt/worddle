@@ -73,6 +73,8 @@ parts:
      source-subdir: src/
      override-build: |
             export PATH=/opt/qt515/bin:$PATH
+            export LD_LIBRARY_PATH=/opt/qt515/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+            . /opt/qt515/bin/qt515-env.sh
             which qmake
             snapcraftctl build
             sed -i 's|Icon=.*|Icon=${SNAP}/meta/gui/icon.png|g' ${SNAPCRAFT_PART_SRC}/worddle.desktop
