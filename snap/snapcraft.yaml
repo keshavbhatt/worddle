@@ -74,6 +74,7 @@ parts:
      override-build: |
             export PATH=/opt/qt515/bin:$PATH
             export LD_LIBRARY_PATH=/opt/qt515/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+            exort PKG_CONFIG_PATH=/opt/qt515/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
             . /opt/qt515/bin/qt515-env.sh
             which qmake
             snapcraftctl build
