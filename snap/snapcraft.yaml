@@ -89,5 +89,5 @@ parts:
             /opt/qt515/bin/qmake src
             make -j4
             
-            sed -i 's|Icon=.*|Icon=${SNAP}/meta/gui/icon.png|g' ${SNAPCRAFT_PART_SRC}/worddle.desktop
-            cp -rf ${SNAPCRAFT_PART_SRC}/worddle.desktop ${SNAPCRAFT_PART_INSTALL}/usr/share/applications/worddle.desktop
+            sed -i 's|Icon=.*|Icon=${SNAP}/meta/gui/icon.png|g' ${SNAPCRAFT_PART_SRC}/src/worddle.desktop
+            cp -rf ${SNAPCRAFT_PART_SRC}/src/worddle.desktop ${SNAPCRAFT_PART_INSTALL}/usr/share/applications/worddle.desktop
