@@ -13,16 +13,19 @@ MainWindow::MainWindow(QWidget *parent)
   setMinimumWidth(350);
   setMinimumHeight(500);
 
-  spinner = new Spinner();
-
   ui->centralWidget->layout()->setContentsMargins(0, 0, 0, 0);
 
   webenginePlayerWidget = new WebEnginePlayer(this);
+  webenginePlayerWidget->installEventFilter(this);
+  spinner = new Spinner(webenginePlayerWidget);
+  spinner->setGeometry(this->rect());
+  connect(webenginePlayerWidget, SIGNAL(loadingStarted()), spinner, SLOT(start()));
+  connect(webenginePlayerWidget, SIGNAL(loadingFinished()), spinner, SLOT(stop()));
 
   // init stackWidget
   ui->stackedWidget->setAnimation(QEasingCurve::Type::OutQuart);
   ui->stackedWidget->setSpeed(650);
-  connect(ui->stackedWidget, &QStackedWidget::currentChanged, [=](int arg1) {
+  connect(ui->stackedWidget, &QStackedWidget::currentChanged, ui->stackedWidget, [=](int arg1) {
     Q_UNUSED(arg1);
     if (stackVector.isEmpty() &&
         ui->stackedWidget->currentWidget() != webenginePlayerWidget) {
@@ -44,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
   rateApp->setWindowFlags(Qt::Dialog);
   rateApp->setAttribute(Qt::WA_DeleteOnClose, true);
   QPoint centerPos = this->geometry().center() - rateApp->geometry().center();
-  connect(rateApp, &RateApp::showRateDialog, [=]() {
+  connect(rateApp, &RateApp::showRateDialog, rateApp, [=]() {
     if (this->windowState() != Qt::WindowMinimized && this->isVisible() &&
         isActiveWindow()) {
       rateApp->move(centerPos);
@@ -75,6 +78,14 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event) {
     }
   }
   return QMainWindow::eventFilter(obj, event);
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    if(spinner !=nullptr){
+        spinner->setGeometry(this->rect());
+    }
+    QMainWindow::resizeEvent(event);
 }
 
 void MainWindow::switchStackWidget(QWidget *widget, bool addToStackVector) {

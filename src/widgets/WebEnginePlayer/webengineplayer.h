@@ -15,11 +15,16 @@ class WebEnginePlayer : public QWidget {
 public:
   explicit WebEnginePlayer(QWidget *parent = nullptr);
 
+signals:
+    void loadingStarted();
+    void loadingFinished();
 public slots:
   void reset();
 private slots:
   void fullScreenRequested(QWebEngineFullScreenRequest request);
 
+  void insertStyleSheet(const QString &name, const QString &source, bool immediately);
+  void removeStyleSheet(const QString &name, bool immediately);
 private:
   QWebEngineView *m_view = nullptr;
   QScopedPointer<FullScreenWindow> m_fullScreenWindow;

@@ -25,6 +25,7 @@ public slots:
 protected slots:
     void closeEvent(QCloseEvent *event);
     bool eventFilter(QObject *obj, QEvent *event);
+    void resizeEvent(QResizeEvent *event);
 private:
     Ui::MainWindow *ui;
 
