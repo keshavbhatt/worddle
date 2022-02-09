@@ -59,24 +59,35 @@ package-repositories:
 
 parts:
   application:
-     plugin: qmake
-     build-packages:
-            - build-essential
-            - qt515base
-            - qt515tools
-            - qt515webengine
-            - libgl1-mesa-dev
+     plugin: nil
      stage-packages:
             - qt515base
             - qt515webengine
      source: https://github.com/keshavbhatt/worddle.git
      source-subdir: src/
      override-build: |
+            snapcraftctl build
+            apt install -y build-essential qt515base qt515tools qt515webengine libgl1-mesa-dev
             export PATH=/opt/qt515/bin:$PATH
             export LD_LIBRARY_PATH=/opt/qt515/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
             export PKG_CONFIG_PATH=/opt/qt515/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
-            . /opt/qt515/bin/qt515-env.sh
+            
+            QT_BASE_DIR=/opt/qt515
+            export QTDIR=$QT_BASE_DIR
+            export PATH=$QT_BASE_DIR/bin:$PATH
+
+            if [[ $(uname -m) == "x86_64" ]]; then
+              export LD_LIBRARY_PATH=$QT_BASE_DIR/lib/x86_64-linux-gnu:$QT_BASE_DIR/lib:$LD_LIBRARY_PATH
+            else
+              export LD_LIBRARY_PATH=$QT_BASE_DIR/lib/i386-linux-gnu:$QT_BASE_DIR/lib:$LD_LIBRARY_PATH
+            fi
+
+            export PKG_CONFIG_PATH=$QT_BASE_DIR/lib/pkgconfig:$PKG_CONFIG_PATH
+
             which qmake
-            snapcraftctl build
+            
+            /opt/qt515/bin/qmake src
+            make -j4
+            
             sed -i 's|Icon=.*|Icon=${SNAP}/meta/gui/icon.png|g' ${SNAPCRAFT_PART_SRC}/worddle.desktop
             cp -rf ${SNAPCRAFT_PART_SRC}/worddle.desktop ${SNAPCRAFT_PART_INSTALL}/usr/share/applications/worddle.desktop
