@@ -19,6 +19,17 @@ Wordle is a web-based word game developed by Josh Wardle. Players have six attem
     snap install worddle
 
 
+
+# Requirements & build instructions
+You will require `Qt5.7` or above to build this project.
+
+### How to Build
+
+    $ git clone https://github.com/keshavbhatt/worddle.git
+    $ cd worddle/src
+    $ qmake
+    $ make
+You will se worddle binary, launch it to run the application.
 # Screenshot
 ![Worddle Application for Linux Desktop](https://github.com/keshavbhatt/worddle/blob/main/screenshots/1.png?raw=true)
 ![Worddle Application for Linux Desktop](https://github.com/keshavbhatt/worddle/blob/main/screenshots/2.png?raw=true)
