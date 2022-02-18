@@ -3,22 +3,23 @@ version: '1.0'
 summary: Guess a five-letter word in siz attempts
 description: |
   Wordle is a web-based word game developed by Josh Wardle. Players have six attempts to guess a five-letter word; feedback is given for each guess, in the form of colored tiles, indicating when letters match or occupy the correct position. 
+
 grade: stable
 confinement: strict
 icon: snap/gui/icon.png
 base: core20
-
 compression: lzo
 
 architectures:
   - build-on: amd64
     run-on: amd64
 
+environment:
+  SNAP_DESKTOP_RUNTIME: $SNAP/qt5-core20
+
 apps:
   worddle:
     command: /usr/bin/worddle
-    environment:
-       DISABLE_WAYLAND: 1
     desktop: usr/share/applications/worddle.desktop
     plugs:
         - browser-support
@@ -47,45 +48,28 @@ plugs:
     interface: content
     target: $SNAP/data-dir/sounds
     default-provider: gtk-common-themes
-
-package-repositories:
-        - type: apt
-          formats: [deb, deb-src]
-          components: [main]
-          suites: [focal]
-          key-id: C65D51784EDC19A871DBDBB710C56D0DE9977759
-          url: https://ppa.launchpadcontent.net/beineri/opt-qt-5.15.0-focal/ubuntu
-
+  qt5-core20:
+    interface: content
+    target: $SNAP/qt5-core20
+    default-provider: qt5-core20
 
 parts:
-  application:
-     plugin: nil
-     stage-packages:
-            - qt515base
-            - qt515webengine
+   build-src:
+     plugin: qmake
+     build-packages:
+       - build-essential
+       - qtbase5-dev
+       - qttools5-dev
+       - qtwebengine5-dev
      source: https://github.com/keshavbhatt/worddle.git
      source-subdir: src/
      override-build: |
             snapcraftctl build
-            apt install -y build-essential qt515base qt515tools qt515webengine libgl1-mesa-dev
-            
-            QT_BASE_DIR=/opt/qt515
-            export QTDIR=$QT_BASE_DIR
-            export PATH=$QT_BASE_DIR/bin:$PATH
-
-            if [[ $(uname -m) == "x86_64" ]]; then
-              export LD_LIBRARY_PATH=$QT_BASE_DIR/lib/x86_64-linux-gnu:$QT_BASE_DIR/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
-            else
-              export LD_LIBRARY_PATH=$QT_BASE_DIR/lib/i386-linux-gnu:$QT_BASE_DIR/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
-            fi
-
-            export PKG_CONFIG_PATH=$QT_BASE_DIR/lib/pkgconfig:${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
-
-            which qmake
-            
-            /opt/qt515/bin/qmake src
-            make -j4
-            
             sed -i 's|Icon=.*|Icon=${SNAP}/meta/gui/icon.png|g' ${SNAPCRAFT_PART_SRC}/src/worddle.desktop
             mkdir -p ${SNAPCRAFT_PART_INSTALL}/usr/share/applications
             cp -rf ${SNAPCRAFT_PART_SRC}/src/worddle.desktop ${SNAPCRAFT_PART_INSTALL}/usr/share/applications/worddle.desktop
+   snap-launcher:
+     plugin: dump
+     source-type: local
+     source: snap_launcher/
+     after: [build-src]
