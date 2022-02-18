@@ -26,7 +26,7 @@ package-repositories:
 
 apps:
   worddle:
-    command: /usr/bin/worddle
+    command: bin/desktop-launch $SNAP/usr/bin/worddle
     desktop: usr/share/applications/worddle.desktop
     plugs:
         - browser-support
