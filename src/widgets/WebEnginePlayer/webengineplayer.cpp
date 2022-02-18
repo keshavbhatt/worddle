@@ -41,6 +41,7 @@ WebEnginePlayer::WebEnginePlayer(QWidget *parent)
   });
 
   connect(m_view, &QWebEngineView::loadFinished,this,[=](){
+      m_view->page()->runJavaScript("document.querySelector('game-app').shadowRoot.querySelector('header .menu-left #nav-button').remove()");
       emit loadingFinished();
   });
 
