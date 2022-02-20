@@ -27,6 +27,8 @@ package-repositories:
 apps:
   worddle:
     command: bin/desktop-launch $SNAP/usr/bin/worddle
+    environment:
+       IS_SNAP: 1
     desktop: usr/share/applications/worddle.desktop
     plugs:
         - browser-support
@@ -96,11 +98,18 @@ parts:
             strip ${SNAPCRAFT_PART_INSTALL}/usr/bin/worddle
 
             sed -i 's|Icon=.*|Icon=${SNAP}/meta/gui/icon.png|g' ${SNAPCRAFT_PART_SRC}/src/worddle.desktop
+
             mkdir -p ${SNAPCRAFT_PART_INSTALL}/usr/share/applications
+
             cp -rf ${SNAPCRAFT_PART_SRC}/src/worddle.desktop ${SNAPCRAFT_PART_INSTALL}/usr/share/applications/worddle.desktop
 
-  snap-launcher:
-     plugin: dump
-     source-type: local
-     source: snap_launcher/
+  desktop-launch:
+     plugin: nil
+     source: https://github.com/keshavbhatt/qt515-core20.git
      after: [build-src]
+     override-build: |
+            snapcraftctl build
+
+            mkdir -p ${SNAPCRAFT_PART_INSTALL}/bin/
+
+            cp -rf ${SNAPCRAFT_PART_SRC}/snap_launcher/bin/desktop-launch ${SNAPCRAFT_PART_INSTALL}/bin/
