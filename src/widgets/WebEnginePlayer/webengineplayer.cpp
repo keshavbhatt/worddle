@@ -25,6 +25,8 @@ WebEnginePlayer::WebEnginePlayer(QWidget *parent)
 
   m_view->settings()->setAttribute(QWebEngineSettings::FullScreenSupportEnabled,
                                    true);
+  m_view->settings()->setAttribute(
+      QWebEngineSettings::JavascriptCanAccessClipboard, true);
   m_view->page()->profile()->settings()->setAttribute(
       QWebEngineSettings::ShowScrollBars, false);
   m_view->page()->settings()->setAttribute(QWebEngineSettings::ShowScrollBars,
@@ -42,8 +44,11 @@ WebEnginePlayer::WebEnginePlayer(QWidget *parent)
           [=]() { emit loadingStarted(); });
 
   connect(m_view, &QWebEngineView::loadFinished, this, [=]() {
-    QString set_vars = "var setting_button = document.querySelector('body > game-app').shadowRoot.querySelector('#settings-button');";
-    QString add_event_listeners = "setting_button.addEventListener('click', remove_menu);";
+    QString set_vars =
+        "var setting_button = document.querySelector('body > "
+        "game-app').shadowRoot.querySelector('#settings-button');";
+    QString add_event_listeners =
+        "setting_button.addEventListener('click', remove_menu);";
     QString remove_menu =
         "function remove_menu(){document.querySelector('body > "
         "game-app').shadowRoot.querySelector('#game > game-page > "
@@ -52,7 +57,8 @@ WebEnginePlayer::WebEnginePlayer(QWidget *parent)
     QString remove_nav_btn =
         "document.querySelector('game-app').shadowRoot.querySelector('header "
         ".menu-left #nav-button').remove();";
-    m_view->page()->runJavaScript(set_vars + add_event_listeners + remove_menu + remove_nav_btn);
+    m_view->page()->runJavaScript(set_vars + add_event_listeners + remove_menu +
+                                  remove_nav_btn);
     emit loadingFinished();
   });
 
