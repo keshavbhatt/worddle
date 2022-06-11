@@ -6,6 +6,7 @@
 #include <QMainWindow>
 #include <QWebEngineFullScreenRequest>
 #include <QWebEngineView>
+#include "webenginepage.h"
 
 class WebEnginePlayer : public QWidget {
   Q_OBJECT

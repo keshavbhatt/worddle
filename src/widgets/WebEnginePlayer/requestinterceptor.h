@@ -16,6 +16,8 @@ public:
                            "google-analytics",
                            "dailywordle.com/images/",
                            "nyt.com",
+                           "promo",
+                           "promotion",
                            "doubleclick.net",
                            "pnytimes.chartbeat.net",
                            "nytimes.com/track"};
