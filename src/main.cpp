@@ -18,9 +18,10 @@ int main(int argc, char *argv[]) {
 
 #ifdef QT_DEBUG
   qputenv("QTWEBENGINE_CHROMIUM_FLAGS", "--remote-debugging-port=9421");
-#endif
+#else
   qputenv("QTWEBENGINE_CHROMIUM_FLAGS",
           "--disable-logging --single-process --disable-web-security");
+#endif
 
   QApplication a(argc, argv);
 

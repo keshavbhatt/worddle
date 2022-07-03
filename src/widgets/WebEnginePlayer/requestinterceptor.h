@@ -20,7 +20,13 @@ public:
                            "promotion",
                            "doubleclick.net",
                            "pnytimes.chartbeat.net",
-                           "nytimes.com/track"};
+                           "nytimes.com/track",
+                           "grumi-ip",
+                           "geoedge.",
+                           "adsystem",
+                           "googletagservices",
+                           "contextual.media.net",
+                           "ingest.sentry.io"};
     foreach (QString badUrl, badUrls) {
       if (reqUrlStr.contains(badUrl, Qt::CaseInsensitive))
         info.block(true);

@@ -24,6 +24,7 @@ private slots:
 
   void insertStyleSheet(const QString &name, const QString &source, bool immediately);
   void removeStyleSheet(const QString &name, bool immediately);
+  void injectMutationObserver();
 private:
   QWebEngineView *m_view = nullptr;
   QScopedPointer<FullScreenWindow> m_fullScreenWindow;
