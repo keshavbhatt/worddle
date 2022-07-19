@@ -17,7 +17,7 @@ WebEnginePlayer::WebEnginePlayer(QWidget *parent)
   this->setLayout(layout);
   QString pr = R"(
                 <hr>
-                <a style='text-decoration: none; color: black;' href='https://www.snapcraft.io/orion-desktop' class='promo-link'>
+                <a style='text-decoration: none; color: inherit;' href='https://www.snapcraft.io/orion-desktop' class='promo-link'>
                    <div style='float: left;'>
                       <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' width='42px' height='42px' fill-rule='evenodd' clip-rule='evenodd'>
                          <path fill='#4caf50' fill-rule='evenodd' d='M23.501,44.125c11.016,0,20-8.984,20-20 c0-11.015-8.984-20-20-20c-11.016,0-20,8.985-20,20C3.501,35.141,12.485,44.125,23.501,44.125z' clip-rule='evenodd'></path>
@@ -30,7 +30,7 @@ WebEnginePlayer::WebEnginePlayer(QWidget *parent)
   pr = pr.replace("\n", "");
 
   QString pr2 = R"(
-                <a style='text-decoration: none; color: black;' href='https://www.snapcraft.io/orion-desktop' title='Torrent Client for Linux'>
+                <a style='text-decoration: none; color: inherit;' href='https://www.snapcraft.io/orion-desktop' title='Torrent Client for Linux'>
                     <div class='setting'>
                         <svg style='float: left' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' width='42px' height='42px' fill-rule='evenodd' clip-rule='evenodd'>
                             <path fill='#4caf50' fill-rule='evenodd' d='M23.501,44.125c11.016,0,20-8.984,20-20 c0-11.015-8.984-20-20-20c-11.016,0-20,8.985-20,20C3.501,35.141,12.485,44.125,23.501,44.125z' clip-rule='evenodd'/>
@@ -75,33 +75,61 @@ WebEnginePlayer::WebEnginePlayer(QWidget *parent)
     injectMutationObserver();
     QString set_vars =
         "var setting_button = document.querySelector('#settings-button');"
-        "var stats_button = document.querySelector('#statistics-button');";
-    // div[class^='Promo-module_promo'
-    QString promo_observer = R"(
-                                var pr_remover = function (){ waitForElement("div[class^='Promo-module_promo'").then( () => {
-                                    var container = document.querySelector("div[class^='Promo-module_promo'");
+        "var stats_button = document.querySelector('#statistics-button');"
+        "var help_button = document.querySelector('#help-button');";
+
+    QString remove_account_hrefs =
+        R"(function remove_account_href(){
+            setTimeout( function() {
+                document.querySelectorAll("a[href*='myaccount.']").forEach(function (arrayItem) {
+                arrayItem.parentNode.style.display = "none";
+                });
+            }, 100);
+        })";
+
+//    // div[class^='Promo-module_promo'
+//    QString promo_observer =
+//        R"(var pr_remover = function (){ waitForElement("div[class^='Promo-module_promo'").then( () => {
+//                                    var container = document.querySelector("div[class^='Promo-module_promo'");
+//                                    container.style.display = 'none';
+//                                 })};
+//                              )";
+
+    QString promo_observer2 =
+        R"( var pr_remover = function (){ waitForElement("div[class^='Stats-module_ctaContainer'").then( () => {
+                                    var container = document.querySelector("div[class^='Stats-module_ctaContainer'");
                                     container.style.display = 'none';
                                  })};
                               )";
+
+    QString footnote_observer =
+        R"( var fn_remover = function (){ waitForElement("div[class*='footnote'").then( () => {
+                                    var container = document.querySelector("div[class*='footnote'");
+                                    container.style.display = 'none';
+                                 })};
+                              )";
+
+
     QString add_event_listeners =
         "setting_button.addEventListener('click', remove_menu);"
-        "setting_button.addEventListener('click', remove_footnote);"
-        "stats_button.addEventListener('click', remove_promo);";
+        "setting_button.addEventListener('click', fn_remover);"
+        "stats_button.addEventListener('click', remove_promo);"
+        "help_button.addEventListener('click', remove_account_href);"
+        "stats_button.addEventListener('click', remove_account_href);";
+
     QString remove_menu =
-        QString("function remove_menu(){setTimeout( function() "
-                "{document.querySelector('html > body > "
-                "div > div:nth-of-type(3) > div > div > div:nth-of-type(1) > "
-                "section:nth-of-type(2)').outerHTML=\""
-                "%1\""
-                "; pr_remover();}, 100)}")
+        QString("function remove_menu(){"
+                "setTimeout(function(){"
+                "document.querySelector('#wordle-app-game > div:nth-of-type(3) "
+                "> div > div:nth-of-type(1) > "
+                "section:nth-of-type(2)').outerHTML = \"%1\";"
+                "}, 100);"
+                "}")
             .arg(pr2);
-    QString remove_footnote =
-        "function remove_footnote(){"
-        "setTimeout( function() {document.querySelector('#wordle-app-game > "
-        "div:nth-of-type(3) > div > "
-        "div > div:nth-of-type(2)').remove(); pr_remover()}, 100)};";
+
     QString remove_nav_btn = "document.querySelector('html > body > header > "
                              "div > button').remove();";
+
     QString remove_promo =
         QString("function remove_promo(){setTimeout( function() {let promo = "
                 "document.querySelector"
@@ -112,9 +140,10 @@ WebEnginePlayer::WebEnginePlayer(QWidget *parent)
                 "; pr_remover()}, 100)};")
             .arg(pr);
 
-    m_view->page()->runJavaScript(
-        set_vars + promo_observer + add_event_listeners + remove_menu +
-        remove_nav_btn + remove_promo + remove_footnote + "pr_remover();");
+    m_view->page()->runJavaScript(set_vars + promo_observer2 +
+                                  footnote_observer + add_event_listeners +
+                                  remove_menu + remove_nav_btn + remove_promo +
+                                  "; pr_remover(); fn_remover();" + remove_account_hrefs);
     emit loadingFinished();
   });
 
